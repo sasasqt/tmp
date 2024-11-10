@@ -119,16 +119,16 @@ class Service(Communicator):
         self,
         service_name: str,
         callback: Callable[[str], ResponseType],
-        respnse_type: ResponseType,
+        response_type: ResponseType,
     ) -> None:
         super().__init__()
         self.service_name = service_name
         self.callback_func = callback
-        if respnse_type == str:
+        if response_type == str:
             self.sender = self.send_string
-        elif respnse_type == bytes:
+        elif response_type == bytes:
             self.sender = self.send_bytes
-        elif respnse_type == Dict:
+        elif response_type == Dict:
             self.sender = self.send_dict
         else:
             raise ValueError("Invalid response type")

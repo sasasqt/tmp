@@ -167,8 +167,8 @@ def main():
 
     if env.sim is not None and env.sim.stage is not None:
         print("parsing usd stage...")
-        publisher = IsaacSimPublisher(host="192.168.0.134", stage=env.sim.stage)
-        # publisher = IsaacSimPublisher(host="127.0.0.1", stage=env.sim.stage)
+        #publisher = IsaacSimPublisher(host="192.168.0.134", stage=env.sim.stage)
+        publisher = IsaacSimPublisher(host="127.0.0.1", stage=env.sim.stage)
 
     # meta_quest3 = MetaQuest3("ALRMetaQuest3")
 

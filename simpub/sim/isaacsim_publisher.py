@@ -240,7 +240,7 @@ class IsaacSimPublisher(SimPublisher):
                 + f"normal per index: {normals.shape[0] // 3} {indices.shape[0]}"
             )
 
-            sim_mesh = self.build_mesh_buffer(mesh_obj)
+            sim_mesh = self.build_mesh_buffer(mesh_obj,prim_path)
             sim_obj.visuals.append(sim_mesh)
 
         elif prim_type == "Cube":
@@ -289,7 +289,7 @@ class IsaacSimPublisher(SimPublisher):
             # scale/translation/rotation not handled,
             # since it seems that isaac lab won't modify them...
 
-            sim_mesh = self.build_mesh_buffer(capsule_mesh)
+            sim_mesh = self.build_mesh_buffer(capsule_mesh,prim_path)
             sim_obj.visuals.append(sim_mesh)
 
         elif prim_type == "Cone":
@@ -316,7 +316,7 @@ class IsaacSimPublisher(SimPublisher):
             # scale/translation/rotation not handled,
             # since it seems that isaac lab won't modify them...
 
-            sim_mesh = self.build_mesh_buffer(cone_mesh)
+            sim_mesh = self.build_mesh_buffer(cone_mesh,prim_path)
             sim_obj.visuals.append(sim_mesh)
 
         elif prim_type == "Cylinder":
@@ -340,7 +340,7 @@ class IsaacSimPublisher(SimPublisher):
             # scale/translation/rotation not handled,
             # since it seems that isaac lab won't modify them...
 
-            sim_mesh = self.build_mesh_buffer(cylinder_mesh)
+            sim_mesh = self.build_mesh_buffer(cylinder_mesh,prim_path)
             sim_obj.visuals.append(sim_mesh)
 
         elif prim_type == "Sphere":
@@ -354,10 +354,10 @@ class IsaacSimPublisher(SimPublisher):
             # scale/translation/rotation not handled,
             # since it seems that isaac lab won't modify them...
 
-            sim_mesh = self.build_mesh_buffer(sphere_mesh)
+            sim_mesh = self.build_mesh_buffer(sphere_mesh,prim_path)
             sim_obj.visuals.append(sim_mesh)
 
-    def build_mesh_buffer(self, mesh_obj: trimesh.Trimesh):
+    def build_mesh_buffer(self, mesh_obj: trimesh.Trimesh,mesh_name=None):
         mesh_obj.apply_transform(
             trimesh.transformations.euler_matrix(-math.pi / 2.0, math.pi / 2.0, 0)
         )
@@ -403,9 +403,11 @@ class IsaacSimPublisher(SimPublisher):
         hash = md5(bin_data).hexdigest()
 
         #! todo: do not create new mesh when multiple primitives point to the same prototype
-        mesh_id = "@mesh-" + str(random.randint(int(1e9), int(1e10 - 1)))
+        # mesh_id = "@mesh-" + str(random.randint(int(1e9), int(1e10 - 1)))
+        if (mesh_name is None):
+            mesh_name="@mesh-" + str(random.randint(int(1e9), int(1e10 - 1)))
         mesh = SimMesh(
-            id=mesh_id,
+            name=mesh_name,
             indicesLayout=indices_layout,
             verticesLayout=vertices_layout,
             normalsLayout=normal_layout,
@@ -419,7 +421,7 @@ class IsaacSimPublisher(SimPublisher):
 
         sim_mesh = SimVisual(
             type=VisualType.MESH,
-            mesh=mesh_id,
+            mesh=mesh_name,
             color=[1.0, 1.0, 1.0, 1.0],
             trans=SimTransform(),
         )
